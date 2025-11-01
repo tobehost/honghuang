@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>音乐详情 - 洪荒文化IP站 By HAISNAP</title>
+  
+  <!-- Bootstrap 4 CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+  
+  <!-- 自定义样式 -->
+  <link rel="stylesheet" href="/static/css/style.css">
+  
+  <!-- Google Fonts - 思源宋体 -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap">
+  
+  <style>
+    .detail-container {
+      margin-top: 30px;
+      margin-bottom: 50px;
+    }
+    
+    .album-cover {
+      width: 100%;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(212, 104, 26, 0.3);
+      object-fit: cover;
+      max-height: 500px;
+    }
+    
+    .detail-card {
+      background: white;
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0 4px 15px rgba(212, 104, 26, 0.2);
+    }
+    
+    .detail-title {
+      color: var(--secondary-color);
+      font-size: 2rem;
+      font-weight: bold;
+      margin-bottom: 20px;
+      border-bottom: 3px solid var(--border-color);
+      padding-bottom: 15px;
+    }
+    
+    .detail-info {
+      margin-bottom: 15px;
+      font-size: 1.1rem;
+      line-height: 1.8;
+    }
+    
+    .detail-info strong {
+      color: var(--secondary-color);
+      display: inline-block;
+      width: 120px;
+    }
+    
+    .price-tag {
+      font-size: 2.5rem;
+      color: var(--accent-color);
+      font-weight: bold;
+      margin: 25px 0;
+    }
+    
+    .description-section {
+      margin-top: 30px;
+      padding-top: 25px;
+      border-top: 2px solid var(--border-color);
+    }
+    
+    .description-section h4 {
+      color: var(--secondary-color);
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+    
+    .description-text {
+      font-size: 1.05rem;
+      line-height: 1.9;
+      color: var(--text-dark);
+      text-align: justify;
+    }
+    
+    .action-buttons {
+      margin-top: 30px;
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+    
+    .btn-buy {
+      flex: 1;
+      min-width: 200px;
+      padding: 15px 30px;
+      font-size: 1.2rem;
+    }
+    
+    .btn-back {
+      padding: 15px 30px;
+      font-size: 1.1rem;
+      background: linear-gradient(135deg, #8b4513 0%, #6c3410 100%);
+      border: none;
+      color: white;
+    }
+    
+    .btn-back:hover {
+      background: linear-gradient(135deg, #6c3410 0%, #8b4513 100%);
+      color: white;
+    }
+    
+    .related-section {
+      margin-top: 50px;
+      padding-top: 30px;
+      border-top: 2px solid var(--border-color);
+    }
+    
+    .related-title {
+      color: var(--secondary-color);
+      font-size: 1.8rem;
+      font-weight: bold;
+      margin-bottom: 25px;
+      text-align: center;
+    }
+    
+    .badge-category {
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+      color: white;
+      padding: 8px 20px;
+      border-radius: 20px;
+      font-size: 0.95rem;
+      font-weight: bold;
+      display: inline-block;
+      margin-bottom: 15px;
+    }
+    
+    .loading-spinner {
+      text-align: center;
+      padding: 100px 0;
+      color: var(--primary-color);
+      font-size: 1.3rem;
+    }
+    
+    .error-message {
+      text-align: center;
+      padding: 100px 0;
+      color: var(--accent-color);
+    }
+    
+    .audio-player {
+      width: 100%;
+      margin-top: 20px;
+      border-radius: 10px;
+      background: rgba(212, 104, 26, 0.05);
+      padding: 15px;
+    }
+    
+    .audio-player audio {
+      width: 100%;
+      height: 50px;
+    }
+    
+    .track-list {
+      margin-top: 20px;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    
+    .track-item {
+      padding: 12px 15px;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: white;
+    }
+    
+    .track-item:hover {
+      border-color: var(--primary-color);
+      background: rgba(212, 104, 26, 0.05);
+      transform: translateX(5px);
+    }
+    
+    .track-item.active {
+      border-color: var(--primary-color);
+      background: rgba(212, 104, 26, 0.1);
+      font-weight: bold;
+    }
+    
+    .track-number {
+      width: 30px;
+      height: 30px;
+      background: var(--primary-color);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      margin-right: 15px;
+    }
+    
+    .track-info {
+      flex: 1;
+    }
+    
+    .track-duration {
+      color: #999;
+      font-size: 0.9rem;
+    }
+    
+    .stats-badge {
+      display: inline-block;
+      padding: 5px 15px;
+      background: rgba(212, 104, 26, 0.1);
+      border-radius: 15px;
+      margin-right: 10px;
+      margin-bottom: 10px;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 导航栏 -->
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+      <a class="navbar-brand" href="/">洪荒世界</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/category/novel">📚 小说</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="/category/music">🎵 音乐</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/category/anime">🎬 动漫</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/category/wallpaper">🖼️ 壁纸</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/admin">数据中台</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" id="loginBtn">登录</a>
+          </li>
+          <li class="nav-item dropdown" id="userDropdown" style="display: none;">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown">
+              <span id="usernameDisplay">用户</span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right">
+              <a class="dropdown-item" href="#" id="userCenterBtn">会员中心</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="#" id="logoutBtn">退出登录</a>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 详情内容 -->
+  <div class="container detail-container">
+    <div id="loadingSpinner" class="loading-spinner">
+      <div class="spinner-border text-primary" role="status">
+        <span class="sr-only">加载中...</span>
+      </div>
+      <p class="mt-3">正在加载音乐详情</p>
+    </div>
+
+    <div id="errorMessage" class="error-message" style="display: none;">
+      <h3>加载失败</h3>
+      <p>音乐信息不存在或已被删除</p>
+      <a href="/category/music" class="btn btn-primary mt-3">返回音乐列表</a>
+    </div>
+
+    <div id="detailContent" style="display: none;">
+      <div class="row">
+        <!-- 左侧封面区 -->
+        <div class="col-md-5">
+          <img id="albumCover" src="" alt="专辑封面" class="album-cover">
+          
+          <!-- 音频播放器 -->
+          <div class="audio-player">
+            <h6 style="color: var(--secondary-color); font-weight: bold; margin-bottom: 10px;">
+              <i class="fas fa-music"></i> 试听
+            </h6>
+            <audio id="audioPlayer" controls>
+              <source src="" type="audio/mpeg">
+              您的浏览器不支持音频播放。
+            </audio>
+          </div>
+          
+          <!-- 曲目列表 -->
+          <div class="mt-4">
+            <h5 style="color: var(--secondary-color); font-weight: bold;">曲目列表</h5>
+            <div class="track-list" id="trackList">
+              <!-- 曲目通过JavaScript动态生成 -->
+            </div>
+          </div>
+        </div>
+
+        <!-- 右侧信息区 -->
+        <div class="col-md-7">
+          <div class="detail-card">
+            <span class="badge-category">🎵 音乐</span>
+            <h1 class="detail-title" id="musicTitle">音乐标题</h1>
+            
+            <div class="detail-info">
+              <strong>歌手：</strong>
+              <span id="musicArtist">-</span>
+            </div>
+            
+            <div class="detail-info">
+              <strong>专辑：</strong>
+              <span id="musicAlbum">-</span>
+            </div>
+            
+            <div class="detail-info">
+              <strong>风格：</strong>
+              <span id="musicGenre">-</span>
+            </div>
+            
+            <div class="detail-info">
+              <strong>发行公司：</strong>
+              <span id="musicLabel">-</span>
+            </div>
+            
+            <div class="detail-info">
+              <strong>发行时间：</strong>
+              <span id="musicReleaseDate">-</span>
+            </div>
+            
+            <div class="mt-3">
+              <span class="stats-badge">⭐ 评分：9.2</span>
+              <span class="stats-badge">▶️ 播放：8.6万次</span>
+              <span class="stats-badge">💬 评论：152条</span>
+            </div>
+            
+            <div class="price-tag">
+              ¥<span id="musicPrice">0.00</span>
+            </div>
+            
+            <div class="description-section">
+              <h4>专辑简介</h4>
+              <p class="description-text" id="musicDescription">
+                音乐专辑简介加载中...
+              </p>
+            </div>
+            
+            <div class="action-buttons">
+              <button class="btn btn-primary btn-buy" id="buyBtn">
+                <i class="fas fa-shopping-cart"></i> 立即购买
+              </button>
+              <a href="/category/music" class="btn btn-back">
+                <i class="fas fa-arrow-left"></i> 返回列表
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 相关推荐 -->
+      <div class="related-section">
+        <h3 class="related-title">相关推荐</h3>
+        <div class="row" id="relatedContent">
+          <div class="col-12 text-center text-muted">
+            <p>正在加载相关音乐...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 登录模态框 -->
+  <div class="modal fade" id="loginModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">用户登录</h5>
+          <button type="button" class="close" data-dismiss="modal">
+            <span>&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="loginForm">
+            <div class="form-group">
+              <label for="loginUsername">用户名</label>
+              <input type="text" class="form-control" id="loginUsername" placeholder="请输入用户名" required>
+            </div>
+            <div class="form-group">
+              <label for="loginPassword">密码</label>
+              <input type="password" class="form-control" id="loginPassword" placeholder="请输入密码" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">登录</button>
+          </form>
+          <div class="text-center mt-3">
+            <small>还没有账号？<a href="#" id="showRegisterLink">立即注册</a></small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 注册模态框 -->
+  <div class="modal fade" id="registerModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">用户注册</h5>
+          <button type="button" class="close" data-dismiss="modal">
+            <span>&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="registerForm">
+            <div class="form-group">
+              <label for="registerUsername">用户名</label>
+              <input type="text" class="form-control" id="registerUsername" placeholder="请输入用户名" required>
+            </div>
+            <div class="form-group">
+              <label for="registerPassword">密码</label>
+              <input type="password" class="form-control" id="registerPassword" placeholder="请输入密码" required>
+            </div>
+            <div class="form-group">
+              <label for="registerConfirmPassword">确认密码</label>
+              <input type="password" class="form-control" id="registerConfirmPassword" placeholder="请再次输入密码" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">注册</button>
+          </form>
+          <div class="text-center mt-3">
+            <small>已有账号？<a href="#" id="showLoginLink">立即登录</a></small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- jQuery -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.min.js"></script>
+  
+  <!-- Bootstrap 4 JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+  <script>
+    (function() {
+      'use strict';
+
+      const AppState = {
+        currentUser: null,
+        token: null,
+        musicId: null,
+        musicData: null,
+        currentTrack: 1
+      };
+
+      const API_BASE = '/api';
+
+      function showToast(message, type = 'info') {
+        const toast = $('<div>')
+          .addClass(`alert alert-${type} alert-dismissible fade show`)
+          .css({
+            position: 'fixed',
+            top: '80px',
+            right: '20px',
+            zIndex: 9999,
+            minWidth: '300px'
+          })
+          .html(`
+            ${message}
+            <button type="button" class="close" data-dismiss="alert">
+              <span>&times;</span>
+            </button>
+          `);
+        
+        $('body').append(toast);
+        setTimeout(() => toast.alert('close'), 3000);
+      }
+
+      function apiRequest(endpoint, options = {}) {
+        const config = {
+          url: `${API_BASE}${endpoint}`,
+          method: options.method || 'GET',
+          contentType: 'application/json',
+          dataType: 'json',
+          timeout: 15000,
+          ...options
+        };
+
+        if (AppState.token) {
+          config.headers = {
+            'Authorization': `Bearer ${AppState.token}`
+          };
+        }
+
+        if (options.data && config.method !== 'GET') {
+          config.data = JSON.stringify(options.data);
+        }
+
+        return $.ajax(config).fail(function(jqXHR) {
+          if (jqXHR.status === 401) {
+            handleLogout();
+            showToast('登录已过期，请重新登录', 'warning');
+          }
+        });
+      }
+
+      function getMusicIdFromUrl() {
+        const pathParts = window.location.pathname.split('/');
+        return pathParts[pathParts.length - 1];
+      }
+
+      function loadMusicDetail() {
+        AppState.musicId = getMusicIdFromUrl();
+        
+        if (!AppState.musicId || isNaN(AppState.musicId)) {
+          showError();
+          return;
+        }
+
+        apiRequest(`/content/${AppState.musicId}`)
+          .done(function(response) {
+            if (response.success && response.data) {
+              AppState.musicData = response.data;
+              renderMusicDetail(response.data);
+              generateTrackList();
+              loadRelatedMusic();
+            } else {
+              showError();
+            }
+          })
+          .fail(function() {
+            showError();
+          });
+      }
+
+      function renderMusicDetail(music) {
+        $('#loadingSpinner').hide();
+        $('#detailContent').fadeIn();
+
+        $('#musicTitle').text(music.title || '未知音乐');
+        $('#albumCover').attr('src', music.image_url || 'https://via.placeholder.com/400x400');
+        $('#musicPrice').text(music.price ? music.price.toFixed(2) : '0.00');
+        $('#musicDescription').text(music.description || '暂无专辑简介');
+        
+        $('#musicArtist').text('洪荒音乐团队');
+        $('#musicAlbum').text(music.title || '洪荒音乐专辑');
+        $('#musicGenre').text('古风 / 民乐 / 史诗');
+        $('#musicLabel').text('洪荒文化唱片');
+        
+        if (music.created_at) {
+          const date = new Date(music.created_at);
+          $('#musicReleaseDate').text(date.toLocaleDateString('zh-CN'));
+        }
+
+        document.title = `${music.title} - 音乐详情 - 洪荒文化IP站`;
+      }
+
+      function generateTrackList() {
+        const tracks = [
+          { name: '开天辟地', duration: '04:32' },
+          { name: '盘古颂歌', duration: '03:58' },
+          { name: '神魔之战', duration: '05:12' },
+          { name: '洪荒纪元', duration: '04:45' },
+          { name: '远古传说', duration: '03:26' },
+          { name: '天地玄黄', duration: '04:18' },
+          { name: '上古之音', duration: '05:03' },
+          { name: '神话旋律', duration: '04:52' }
+        ];
+
+        const tracksHtml = tracks.map((track, index) => `
+          <div class="track-item ${index === 0 ? 'active' : ''}" data-track="${index + 1}">
+            <div style="display: flex; align-items: center; flex: 1;">
+              <div class="track-number">${index + 1}</div>
+              <div class="track-info">
+                <div style="font-weight: 500;">${track.name}</div>
+              </div>
+            </div>
+            <div class="track-duration">${track.duration}</div>
+          </div>
+        `).join('');
+
+        $('#trackList').html(tracksHtml);
+      }
+
+      function showError() {
+        $('#loadingSpinner').hide();
+        $('#errorMessage').fadeIn();
+      }
+
+      function loadRelatedMusic() {
+        apiRequest('/content?type=music&limit=3')
+          .done(function(response) {
+            if (response.success && response.data) {
+              const filtered = response.data.filter(item => item.id !== parseInt(AppState.musicId));
+              renderRelatedMusic(filtered.slice(0, 3));
+            }
+          });
+      }
+
+      function renderRelatedMusic(musicList) {
+        if (!musicList || musicList.length === 0) {
+          $('#relatedContent').html('<div class="col-12 text-center text-muted"><p>暂无相关推荐</p></div>');
+          return;
+        }
+
+        const html = musicList.map(item => `
+          <div class="col-md-4">
+            <div class="content-card">
+              <img src="${item.image_url || 'https://via.placeholder.com/300x250'}" alt="${item.title}">
+              <div class="card-body">
+                <h5 class="card-title">${item.title}</h5>
+                <p class="card-text">${item.description || '暂无描述'}</p>
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                  <span class="price">¥${item.price}</span>
+                  <a href="/detail/${item.id}" class="btn btn-primary btn-sm">查看详情</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        `).join('');
+
+        $('#relatedContent').html(html);
+      }
+
+      function handlePurchase() {
+        if (!AppState.currentUser) {
+          showToast('请先登录', 'warning');
+          $('#loginModal').modal('show');
+          return;
+        }
+
+        if (!AppState.musicData) {
+          showToast('音乐信息加载失败', 'danger');
+          return;
+        }
+
+        if (confirm(`确认购买《${AppState.musicData.title}》？价格：¥${AppState.musicData.price}`)) {
+          apiRequest('/order', {
+            method: 'POST',
+            data: { content_id: AppState.musicId }
+          })
+            .done(function(response) {
+              if (response.success) {
+                showToast('订单创建成功', 'success');
+                
+                if (confirm('是否立即支付？')) {
+                  handlePayment(response.data.id);
+                }
+              } else {
+                showToast(response.message || '购买失败', 'danger');
+              }
+            });
+        }
+      }
+
+      function handlePayment(orderId) {
+        apiRequest(`/order/${orderId}/pay`, {
+          method: 'POST'
+        })
+          .done(function(response) {
+            if (response.success) {
+              showToast('支付成功', 'success');
+            } else {
+              showToast(response.message || '支付失败', 'danger');
+            }
+          });
+      }
+
+      function initAuthState() {
+        const token = localStorage.getItem('token');
+        const user = localStorage.getItem('user');
+        
+        if (token && user) {
+          try {
+            AppState.token = token;
+            AppState.currentUser = JSON.parse(user);
+            updateAuthUI();
+          } catch (e) {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+          }
+        }
+      }
+
+      function updateAuthUI() {
+        if (AppState.currentUser) {
+          $('#loginBtn').hide();
+          $('#userDropdown').show();
+          $('#usernameDisplay').text(AppState.currentUser.username);
+        } else {
+          $('#loginBtn').show();
+          $('#userDropdown').hide();
+        }
+      }
+
+      function handleLogin() {
+        const username = $('#loginUsername').val().trim();
+        const password = $('#loginPassword').val();
+
+        if (!username || !password) {
+          showToast('请填写用户名和密码', 'warning');
+          return;
+        }
+
+        apiRequest('/user/login', {
+          method: 'POST',
+          data: { username, password }
+        })
+          .done(function(response) {
+            if (response.success) {
+              AppState.token = response.token;
+              AppState.currentUser = response.user;
+              
+              localStorage.setItem('token', response.token);
+              localStorage.setItem('user', JSON.stringify(response.user));
+              
+              showToast('登录成功', 'success');
+              $('#loginModal').modal('hide');
+              $('#loginForm')[0].reset();
+              updateAuthUI();
+            } else {
+              showToast(response.message || '登录失败', 'danger');
+            }
+          });
+      }
+
+      function handleRegister() {
+        const username = $('#registerUsername').val().trim();
+        const password = $('#registerPassword').val();
+        const confirmPassword = $('#registerConfirmPassword').val();
+
+        if (!username || !password) {
+          showToast('请填写完整信息', 'warning');
+          return;
+        }
+
+        if (password !== confirmPassword) {
+          showToast('两次密码输入不一致', 'warning');
+          return;
+        }
+
+        apiRequest('/user/register', {
+          method: 'POST',
+          data: { username, password }
+        })
+          .done(function(response) {
+            if (response.success) {
+              showToast('注册成功，请登录', 'success');
+              $('#registerModal').modal('hide');
+              $('#registerForm')[0].reset();
+              setTimeout(() => $('#loginModal').modal('show'), 500);
+            } else {
+              showToast(response.message || '注册失败', 'danger');
+            }
+          });
+      }
+
+      function handleLogout() {
+        AppState.token = null;
+        AppState.currentUser = null;
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        
+        showToast('已退出登录', 'info');
+        updateAuthUI();
+      }
+
+      function bindEvents() {
+        $('#buyBtn').on('click', handlePurchase);
+        
+        $('#loginBtn').on('click', function(e) {
+          e.preventDefault();
+          $('#loginModal').modal('show');
+        });
+
+        $('#showRegisterLink').on('click', function(e) {
+          e.preventDefault();
+          $('#loginModal').modal('hide');
+          $('#registerModal').modal('show');
+        });
+
+        $('#showLoginLink').on('click', function(e) {
+          e.preventDefault();
+          $('#registerModal').modal('hide');
+          $('#loginModal').modal('show');
+        });
+
+        $('#loginForm').on('submit', function(e) {
+          e.preventDefault();
+          handleLogin();
+        });
+
+        $('#registerForm').on('submit', function(e) {
+          e.preventDefault();
+          handleRegister();
+        });
+
+        $('#logoutBtn').on('click', function(e) {
+          e.preventDefault();
+          handleLogout();
+        });
+
+        $('#userCenterBtn').on('click', function(e) {
+          e.preventDefault();
+          window.location.href = '/';
+        });
+
+        $(document).on('click', '.track-item', function() {
+          const track = $(this).data('track');
+          AppState.currentTrack = track;
+          
+          $('.track-item').removeClass('active');
+          $(this).addClass('active');
+          
+          showToast(`正在播放曲目${track}`, 'info');
+        });
+      }
+
+      $(document).ready(function() {
+        initAuthState();
+        bindEvents();
+        loadMusicDetail();
+      });
+
+    })();
+  </script>
+
+</body>
+</html>

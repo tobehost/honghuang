@@ -1,0 +1,295 @@
+{% extends 'admin/master.html' %}
+
+{% block body %}
+<div class="container-fluid mt-4">
+    <h2 class="mb-4 text-center" style="color: #8b4513; font-weight: bold;">数据统计分析</h2>
+    
+    {% if error %}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>错误：</strong> {{ error }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    {% endif %}
+    
+    <!-- 核心指标卡片 -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-white" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+                <div class="card-body text-center">
+                    <h6 class="card-title mb-3">总用户数</h6>
+                    <h2 class="display-4 mb-0">{{ stats.total_users or 0 }}</h2>
+                    <small class="mt-2">注册用户总数</small>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card text-white" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+                <div class="card-body text-center">
+                    <h6 class="card-title mb-3">VIP会员数</h6>
+                    <h2 class="display-4 mb-0">{{ stats.vip_users or 0 }}</h2>
+                    <small class="mt-2">高级会员总数</small>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card text-white" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+                <div class="card-body text-center">
+                    <h6 class="card-title mb-3">总订单数</h6>
+                    <h2 class="display-4 mb-0">{{ stats.total_orders or 0 }}</h2>
+                    <small class="mt-2">累计订单总数</small>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card text-white" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+                <div class="card-body text-center">
+                    <h6 class="card-title mb-3">已支付订单</h6>
+                    <h2 class="display-4 mb-0">{{ stats.paid_orders or 0 }}</h2>
+                    <small class="mt-2">成功支付订单</small>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 营收统计 -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card" style="border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                <div class="card-header text-white" style="background: linear-gradient(135deg, #d4681a 0%, #ff6347 100%); border-radius: 15px 15px 0 0;">
+                    <h5 class="mb-0"><i class="fa fa-chart-line"></i> 营收统计</h5>
+                </div>
+                <div class="card-body text-center" style="padding: 40px;">
+                    <h3 class="text-muted mb-2">总营收</h3>
+                    <h1 class="display-3" style="color: #d4681a; font-weight: bold;">¥{{ "%.2f"|format(stats.revenue or 0) }}</h1>
+                    <p class="text-muted mt-3">已支付订单总金额</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 详细统计 -->
+    <div class="row">
+        <!-- 用户统计 -->
+        <div class="col-md-6 mb-4">
+            <div class="card" style="border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                <div class="card-header text-white" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 15px 15px 0 0;">
+                    <h5 class="mb-0"><i class="fa fa-users"></i> 用户统计详情</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-hover">
+                        <tbody>
+                            <tr>
+                                <td><strong>总用户数</strong></td>
+                                <td class="text-right"><span class="badge badge-primary badge-pill">{{ stats.total_users or 0 }}</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>VIP用户数</strong></td>
+                                <td class="text-right"><span class="badge badge-warning badge-pill">{{ stats.vip_users or 0 }}</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>普通用户数</strong></td>
+                                <td class="text-right"><span class="badge badge-secondary badge-pill">{{ (stats.total_users or 0) - (stats.vip_users or 0) }}</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>VIP转化率</strong></td>
+                                <td class="text-right">
+                                    {% if stats.total_users and stats.total_users > 0 %}
+                                        <span class="badge badge-success badge-pill">{{ "%.1f"|format((stats.vip_users or 0) / stats.total_users * 100) }}%</span>
+                                    {% else %}
+                                        <span class="badge badge-secondary badge-pill">0.0%</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 订单统计 -->
+        <div class="col-md-6 mb-4">
+            <div class="card" style="border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                <div class="card-header text-white" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); border-radius: 15px 15px 0 0;">
+                    <h5 class="mb-0"><i class="fa fa-shopping-cart"></i> 订单统计详情</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-hover">
+                        <tbody>
+                            <tr>
+                                <td><strong>总订单数</strong></td>
+                                <td class="text-right"><span class="badge badge-info badge-pill">{{ stats.total_orders or 0 }}</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>已支付订单</strong></td>
+                                <td class="text-right"><span class="badge badge-success badge-pill">{{ stats.paid_orders or 0 }}</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>待支付订单</strong></td>
+                                <td class="text-right"><span class="badge badge-warning badge-pill">{{ (stats.total_orders or 0) - (stats.paid_orders or 0) }}</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>支付转化率</strong></td>
+                                <td class="text-right">
+                                    {% if stats.total_orders and stats.total_orders > 0 %}
+                                        <span class="badge badge-success badge-pill">{{ "%.1f"|format((stats.paid_orders or 0) / stats.total_orders * 100) }}%</span>
+                                    {% else %}
+                                        <span class="badge badge-secondary badge-pill">0.0%</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 内容统计 -->
+    {% if stats.content_stats %}
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card" style="border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                <div class="card-header text-white" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border-radius: 15px 15px 0 0;">
+                    <h5 class="mb-0"><i class="fa fa-book"></i> 内容分类统计</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>内容类型</th>
+                                <th class="text-right">数量</th>
+                                <th class="text-right">占比</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% set type_names = {'novel': '小说', 'music': '音乐', 'anime': '动漫', 'wallpaper': '壁纸'} %}
+                            {% for ctype, count in stats.content_stats.items() %}
+                            <tr>
+                                <td><strong>{{ type_names.get(ctype, ctype) }}</strong></td>
+                                <td class="text-right"><span class="badge badge-primary badge-pill">{{ count }}</span></td>
+                                <td class="text-right">
+                                    {% if stats.total_contents and stats.total_contents > 0 %}
+                                        {{ "%.1f"|format(count / stats.total_contents * 100) }}%
+                                    {% else %}
+                                        0.0%
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th>总计</th>
+                                <th class="text-right"><span class="badge badge-success badge-pill">{{ stats.total_contents or 0 }}</span></th>
+                                <th class="text-right">100%</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
+    <!-- 订单状态统计 -->
+    {% if stats.order_stats %}
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card" style="border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                <div class="card-header text-white" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); border-radius: 15px 15px 0 0;">
+                    <h5 class="mb-0"><i class="fa fa-chart-pie"></i> 订单状态分布</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>订单状态</th>
+                                <th class="text-right">数量</th>
+                                <th class="text-right">占比</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% set status_names = {'pending': '待支付', 'paid': '已支付', 'cancelled': '已取消', 'refunded': '已退款'} %}
+                            {% for status, count in stats.order_stats.items() %}
+                            <tr>
+                                <td>
+                                    <strong>{{ status_names.get(status, status) }}</strong>
+                                    {% if status == 'paid' %}
+                                        <span class="badge badge-success ml-2">✓</span>
+                                    {% elif status == 'pending' %}
+                                        <span class="badge badge-warning ml-2">⏱</span>
+                                    {% else %}
+                                        <span class="badge badge-secondary ml-2">✗</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-right"><span class="badge badge-primary badge-pill">{{ count }}</span></td>
+                                <td class="text-right">
+                                    {% if stats.total_orders and stats.total_orders > 0 %}
+                                        {{ "%.1f"|format(count / stats.total_orders * 100) }}%
+                                    {% else %}
+                                        0.0%
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
+    <!-- 数据导出快捷入口 -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card" style="border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                <div class="card-header text-white" style="background: linear-gradient(135deg, #d4681a 0%, #ff6347 100%); border-radius: 15px 15px 0 0;">
+                    <h5 class="mb-0"><i class="fa fa-download"></i> 数据导出</h5>
+                </div>
+                <div class="card-body text-center" style="padding: 30px;">
+                    <p class="text-muted mb-4">导出业务数据为CSV格式，便于进一步分析</p>
+                    <div class="btn-group" role="group">
+                        <a href="{{ url_for('export.export_users') }}" class="btn btn-outline-primary btn-lg" style="border-radius: 25px 0 0 25px;">
+                            <i class="fa fa-users"></i> 导出用户数据
+                        </a>
+                        <a href="{{ url_for('export.export_contents') }}" class="btn btn-outline-success btn-lg">
+                            <i class="fa fa-book"></i> 导出内容数据
+                        </a>
+                        <a href="{{ url_for('export.export_orders') }}" class="btn btn-outline-info btn-lg" style="border-radius: 0 25px 25px 0;">
+                            <i class="fa fa-shopping-cart"></i> 导出订单数据
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+<style>
+    .card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
+    }
+    .badge-pill {
+        padding: 0.4em 0.8em;
+        font-size: 0.95rem;
+    }
+    .table th {
+        border-top: none;
+        color: #8b4513;
+    }
+    .btn-group .btn {
+        margin: 0 5px;
+    }
+</style>
+{% endblock %}

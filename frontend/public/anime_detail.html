@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>动漫详情 - 洪荒文化IP站 By HAISNAP</title>
+  
+  <!-- Bootstrap 4 CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+  
+  <!-- 自定义样式 -->
+  <link rel="stylesheet" href="/static/css/style.css">
+  
+  <!-- Google Fonts - 思源宋体 -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap">
+  
+  <style>
+    .detail-container {
+      margin-top: 30px;
+      margin-bottom: 50px;
+    }
+    
+    .anime-cover {
+      width: 100%;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(212, 104, 26, 0.3);
+      object-fit: cover;
+      max-height: 600px;
+    }
+    
+    .detail-card {
+      background: white;
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0 4px 15px rgba(212, 104, 26, 0.2);
+    }
+    
+    .detail-title {
+      color: var(--secondary-color);
+      font-size: 2rem;
+      font-weight: bold;
+      margin-bottom: 20px;
+      border-bottom: 3px solid var(--border-color);
+      padding-bottom: 15px;
+    }
+    
+    .detail-info {
+      margin-bottom: 15px;
+      font-size: 1.1rem;
+      line-height: 1.8;
+    }
+    
+    .detail-info strong {
+      color: var(--secondary-color);
+      display: inline-block;
+      width: 120px;
+    }
+    
+    .price-tag {
+      font-size: 2.5rem;
+      color: var(--accent-color);
+      font-weight: bold;
+      margin: 25px 0;
+    }
+    
+    .description-section {
+      margin-top: 30px;
+      padding-top: 25px;
+      border-top: 2px solid var(--border-color);
+    }
+    
+    .description-section h4 {
+      color: var(--secondary-color);
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+    
+    .description-text {
+      font-size: 1.05rem;
+      line-height: 1.9;
+      color: var(--text-dark);
+      text-align: justify;
+    }
+    
+    .action-buttons {
+      margin-top: 30px;
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+    
+    .btn-buy {
+      flex: 1;
+      min-width: 200px;
+      padding: 15px 30px;
+      font-size: 1.2rem;
+    }
+    
+    .btn-back {
+      padding: 15px 30px;
+      font-size: 1.1rem;
+      background: linear-gradient(135deg, #8b4513 0%, #6c3410 100%);
+      border: none;
+      color: white;
+    }
+    
+    .btn-back:hover {
+      background: linear-gradient(135deg, #6c3410 0%, #8b4513 100%);
+      color: white;
+    }
+    
+    .related-section {
+      margin-top: 50px;
+      padding-top: 30px;
+      border-top: 2px solid var(--border-color);
+    }
+    
+    .related-title {
+      color: var(--secondary-color);
+      font-size: 1.8rem;
+      font-weight: bold;
+      margin-bottom: 25px;
+      text-align: center;
+    }
+    
+    .badge-category {
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+      color: white;
+      padding: 8px 20px;
+      border-radius: 20px;
+      font-size: 0.95rem;
+      font-weight: bold;
+      display: inline-block;
+      margin-bottom: 15px;
+    }
+    
+    .loading-spinner {
+      text-align: center;
+      padding: 100px 0;
+      color: var(--primary-color);
+      font-size: 1.3rem;
+    }
+    
+    .error-message {
+      text-align: center;
+      padding: 100px 0;
+      color: var(--accent-color);
+    }
+    
+    .episode-list {
+      margin-top: 20px;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    
+    .episode-item {
+      padding: 12px 15px;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: white;
+    }
+    
+    .episode-item:hover {
+      border-color: var(--primary-color);
+      background: rgba(212, 104, 26, 0.05);
+      transform: translateX(5px);
+    }
+    
+    .episode-item.active {
+      border-color: var(--primary-color);
+      background: rgba(212, 104, 26, 0.1);
+      font-weight: bold;
+    }
+    
+    .video-player {
+      width: 100%;
+      border-radius: 15px;
+      margin-bottom: 20px;
+      background: #000;
+      aspect-ratio: 16/9;
+    }
+    
+    .stats-badge {
+      display: inline-block;
+      padding: 5px 15px;
+      background: rgba(212, 104, 26, 0.1);
+      border-radius: 15px;
+      margin-right: 10px;
+      margin-bottom: 10px;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 导航栏 -->
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+      <a class="navbar-brand" href="/">洪荒世界</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/category/novel">📚 小说</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/category/music">🎵 音乐</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="/category/anime">🎬 动漫</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/category/wallpaper">🖼️ 壁纸</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/admin">数据中台</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" id="loginBtn">登录</a>
+          </li>
+          <li class="nav-item dropdown" id="userDropdown" style="display: none;">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown">
+              <span id="usernameDisplay">用户</span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right">
+              <a class="dropdown-item" href="#" id="userCenterBtn">会员中心</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="#" id="logoutBtn">退出登录</a>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 详情内容 -->
+  <div class="container detail-container">
+    <div id="loadingSpinner" class="loading-spinner">
+      <div class="spinner-border text-primary" role="status">
+        <span class="sr-only">加载中...</span>
+      </div>
+      <p class="mt-3">正在加载动漫详情</p>
+    </div>
+
+    <div id="errorMessage" class="error-message" style="display: none;">
+      <h3>加载失败</h3>
+      <p>动漫信息不存在或已被删除</p>
+      <a href="/category/anime" class="btn btn-primary mt-3">返回动漫列表</a>
+    </div>
+
+    <div id="detailContent" style="display: none;">
+      <div class="row">
+        <!-- 左侧封面区 -->
+        <div class="col-md-5">
+          <img id="animeCover" src="" alt="动漫封面" class="anime-cover">
+          
+          <!-- 剧集列表 -->
+          <div class="mt-4">
+            <h5 style="color: var(--secondary-color); font-weight: bold;">剧集列表</h5>
+            <div class="episode-list" id="episodeList">
+              <!-- 剧集通过JavaScript动态生成 -->
+            </div>
+          </div>
+        </div>
+
+        <!-- 右侧信息区 -->
+        <div class="col-md-7">
+          <div class="detail-card">
+            <span class="badge-category">🎬 动漫</span>
+            <h1 class="detail-title" id="animeTitle">动漫标题</h1>
+            
+            <div class="detail-info">
+              <strong>导演：</strong>
+              <span id="animeDirector">-</span>
+            </div>
+            
+            <div class="detail-info">
+              <strong>声优：</strong>
+              <span id="animeVoiceActors">-</span>
+            </div>
+            
+            <div class="detail-info">
+              <strong>类型：</strong>
+              <span id="animeGenre">-</span>
+            </div>
+            
+            <div class="detail-info">
+              <strong>集数：</strong>
+              <span id="animeEpisodes">-</span>
+            </div>
+            
+            <div class="detail-info">
+              <strong>播放时长：</strong>
+              <span id="animeDuration">-</span>
+            </div>
+            
+            <div class="detail-info">
+              <strong>发布时间：</strong>
+              <span id="animeReleaseDate">-</span>
+            </div>
+            
+            <div class="mt-3">
+              <span class="stats-badge">⭐ 评分：9.5</span>
+              <span class="stats-badge">👁️ 观看：1.2万次</span>
+              <span class="stats-badge">💬 评论：236条</span>
+            </div>
+            
+            <div class="price-tag">
+              ¥<span id="animePrice">0.00</span>
+            </div>
+            
+            <div class="description-section">
+              <h4>剧情简介</h4>
+              <p class="description-text" id="animeDescription">
+                动漫剧情简介加载中...
+              </p>
+            </div>
+            
+            <div class="action-buttons">
+              <button class="btn btn-primary btn-buy" id="buyBtn">
+                <i class="fas fa-shopping-cart"></i> 立即购买
+              </button>
+              <a href="/category/anime" class="btn btn-back">
+                <i class="fas fa-arrow-left"></i> 返回列表
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 相关推荐 -->
+      <div class="related-section">
+        <h3 class="related-title">相关推荐</h3>
+        <div class="row" id="relatedContent">
+          <div class="col-12 text-center text-muted">
+            <p>正在加载相关动漫...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 登录模态框 -->
+  <div class="modal fade" id="loginModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">用户登录</h5>
+          <button type="button" class="close" data-dismiss="modal">
+            <span>&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="loginForm">
+            <div class="form-group">
+              <label for="loginUsername">用户名</label>
+              <input type="text" class="form-control" id="loginUsername" placeholder="请输入用户名" required>
+            </div>
+            <div class="form-group">
+              <label for="loginPassword">密码</label>
+              <input type="password" class="form-control" id="loginPassword" placeholder="请输入密码" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">登录</button>
+          </form>
+          <div class="text-center mt-3">
+            <small>还没有账号？<a href="#" id="showRegisterLink">立即注册</a></small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 注册模态框 -->
+  <div class="modal fade" id="registerModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">用户注册</h5>
+          <button type="button" class="close" data-dismiss="modal">
+            <span>&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="registerForm">
+            <div class="form-group">
+              <label for="registerUsername">用户名</label>
+              <input type="text" class="form-control" id="registerUsername" placeholder="请输入用户名" required>
+            </div>
+            <div class="form-group">
+              <label for="registerPassword">密码</label>
+              <input type="password" class="form-control" id="registerPassword" placeholder="请输入密码" required>
+            </div>
+            <div class="form-group">
+              <label for="registerConfirmPassword">确认密码</label>
+              <input type="password" class="form-control" id="registerConfirmPassword" placeholder="请再次输入密码" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">注册</button>
+          </form>
+          <div class="text-center mt-3">
+            <small>已有账号？<a href="#" id="showLoginLink">立即登录</a></small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- jQuery -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.min.js"></script>
+  
+  <!-- Bootstrap 4 JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+  <script>
+    (function() {
+      'use strict';
+
+      const AppState = {
+        currentUser: null,
+        token: null,
+        animeId: null,
+        animeData: null,
+        currentEpisode: 1
+      };
+
+      const API_BASE = '/api';
+
+      function showToast(message, type = 'info') {
+        const toast = $('<div>')
+          .addClass(`alert alert-${type} alert-dismissible fade show`)
+          .css({
+            position: 'fixed',
+            top: '80px',
+            right: '20px',
+            zIndex: 9999,
+            minWidth: '300px'
+          })
+          .html(`
+            ${message}
+            <button type="button" class="close" data-dismiss="alert">
+              <span>&times;</span>
+            </button>
+          `);
+        
+        $('body').append(toast);
+        setTimeout(() => toast.alert('close'), 3000);
+      }
+
+      function apiRequest(endpoint, options = {}) {
+        const config = {
+          url: `${API_BASE}${endpoint}`,
+          method: options.method || 'GET',
+          contentType: 'application/json',
+          dataType: 'json',
+          timeout: 15000,
+          ...options
+        };
+
+        if (AppState.token) {
+          config.headers = {
+            'Authorization': `Bearer ${AppState.token}`
+          };
+        }
+
+        if (options.data && config.method !== 'GET') {
+          config.data = JSON.stringify(options.data);
+        }
+
+        return $.ajax(config).fail(function(jqXHR) {
+          if (jqXHR.status === 401) {
+            handleLogout();
+            showToast('登录已过期，请重新登录', 'warning');
+          }
+        });
+      }
+
+      function getAnimeIdFromUrl() {
+        const pathParts = window.location.pathname.split('/');
+        return pathParts[pathParts.length - 1];
+      }
+
+      function loadAnimeDetail() {
+        AppState.animeId = getAnimeIdFromUrl();
+        
+        if (!AppState.animeId || isNaN(AppState.animeId)) {
+          showError();
+          return;
+        }
+
+        apiRequest(`/content/${AppState.animeId}`)
+          .done(function(response) {
+            if (response.success && response.data) {
+              AppState.animeData = response.data;
+              renderAnimeDetail(response.data);
+              generateEpisodeList();
+              loadRelatedAnimes();
+            } else {
+              showError();
+            }
+          })
+          .fail(function() {
+            showError();
+          });
+      }
+
+      function renderAnimeDetail(anime) {
+        $('#loadingSpinner').hide();
+        $('#detailContent').fadeIn();
+
+        $('#animeTitle').text(anime.title || '未知动漫');
+        $('#animeCover').attr('src', anime.image_url || 'https://via.placeholder.com/400x600');
+        $('#animePrice').text(anime.price ? anime.price.toFixed(2) : '0.00');
+        $('#animeDescription').text(anime.description || '暂无剧情简介');
+        
+        $('#animeDirector').text('洪荒工作室');
+        $('#animeVoiceActors').text('洪荒声优团队');
+        $('#animeGenre').text('玄幻 / 冒险 / 神话');
+        $('#animeEpisodes').text('12集');
+        $('#animeDuration').text('每集约24分钟');
+        
+        if (anime.created_at) {
+          const date = new Date(anime.created_at);
+          $('#animeReleaseDate').text(date.toLocaleDateString('zh-CN'));
+        }
+
+        document.title = `${anime.title} - 动漫详情 - 洪荒文化IP站`;
+      }
+
+      function generateEpisodeList() {
+        const episodesHtml = [];
+        for (let i = 1; i <= 12; i++) {
+          episodesHtml.push(`
+            <div class="episode-item ${i === 1 ? 'active' : ''}" data-episode="${i}">
+              <i class="fas fa-play-circle"></i> 第${i}集
+            </div>
+          `);
+        }
+        $('#episodeList').html(episodesHtml.join(''));
+      }
+
+      function showError() {
+        $('#loadingSpinner').hide();
+        $('#errorMessage').fadeIn();
+      }
+
+      function loadRelatedAnimes() {
+        apiRequest('/content?type=anime&limit=3')
+          .done(function(response) {
+            if (response.success && response.data) {
+              const filtered = response.data.filter(item => item.id !== parseInt(AppState.animeId));
+              renderRelatedAnimes(filtered.slice(0, 3));
+            }
+          });
+      }
+
+      function renderRelatedAnimes(animes) {
+        if (!animes || animes.length === 0) {
+          $('#relatedContent').html('<div class="col-12 text-center text-muted"><p>暂无相关推荐</p></div>');
+          return;
+        }
+
+        const html = animes.map(item => `
+          <div class="col-md-4">
+            <div class="content-card">
+              <img src="${item.image_url || 'https://via.placeholder.com/300x250'}" alt="${item.title}">
+              <div class="card-body">
+                <h5 class="card-title">${item.title}</h5>
+                <p class="card-text">${item.description || '暂无描述'}</p>
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                  <span class="price">¥${item.price}</span>
+                  <a href="/detail/${item.id}" class="btn btn-primary btn-sm">查看详情</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        `).join('');
+
+        $('#relatedContent').html(html);
+      }
+
+      function handlePurchase() {
+        if (!AppState.currentUser) {
+          showToast('请先登录', 'warning');
+          $('#loginModal').modal('show');
+          return;
+        }
+
+        if (!AppState.animeData) {
+          showToast('动漫信息加载失败', 'danger');
+          return;
+        }
+
+        if (confirm(`确认购买《${AppState.animeData.title}》？价格：¥${AppState.animeData.price}`)) {
+          apiRequest('/order', {
+            method: 'POST',
+            data: { content_id: AppState.animeId }
+          })
+            .done(function(response) {
+              if (response.success) {
+                showToast('订单创建成功', 'success');
+                
+                if (confirm('是否立即支付？')) {
+                  handlePayment(response.data.id);
+                }
+              } else {
+                showToast(response.message || '购买失败', 'danger');
+              }
+            });
+        }
+      }
+
+      function handlePayment(orderId) {
+        apiRequest(`/order/${orderId}/pay`, {
+          method: 'POST'
+        })
+          .done(function(response) {
+            if (response.success) {
+              showToast('支付成功', 'success');
+            } else {
+              showToast(response.message || '支付失败', 'danger');
+            }
+          });
+      }
+
+      function initAuthState() {
+        const token = localStorage.getItem('token');
+        const user = localStorage.getItem('user');
+        
+        if (token && user) {
+          try {
+            AppState.token = token;
+            AppState.currentUser = JSON.parse(user);
+            updateAuthUI();
+          } catch (e) {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+          }
+        }
+      }
+
+      function updateAuthUI() {
+        if (AppState.currentUser) {
+          $('#loginBtn').hide();
+          $('#userDropdown').show();
+          $('#usernameDisplay').text(AppState.currentUser.username);
+        } else {
+          $('#loginBtn').show();
+          $('#userDropdown').hide();
+        }
+      }
+
+      function handleLogin() {
+        const username = $('#loginUsername').val().trim();
+        const password = $('#loginPassword').val();
+
+        if (!username || !password) {
+          showToast('请填写用户名和密码', 'warning');
+          return;
+        }
+
+        apiRequest('/user/login', {
+          method: 'POST',
+          data: { username, password }
+        })
+          .done(function(response) {
+            if (response.success) {
+              AppState.token = response.token;
+              AppState.currentUser = response.user;
+              
+              localStorage.setItem('token', response.token);
+              localStorage.setItem('user', JSON.stringify(response.user));
+              
+              showToast('登录成功', 'success');
+              $('#loginModal').modal('hide');
+              $('#loginForm')[0].reset();
+              updateAuthUI();
+            } else {
+              showToast(response.message || '登录失败', 'danger');
+            }
+          });
+      }
+
+      function handleRegister() {
+        const username = $('#registerUsername').val().trim();
+        const password = $('#registerPassword').val();
+        const confirmPassword = $('#registerConfirmPassword').val();
+
+        if (!username || !password) {
+          showToast('请填写完整信息', 'warning');
+          return;
+        }
+
+        if (password !== confirmPassword) {
+          showToast('两次密码输入不一致', 'warning');
+          return;
+        }
+
+        apiRequest('/user/register', {
+          method: 'POST',
+          data: { username, password }
+        })
+          .done(function(response) {
+            if (response.success) {
+              showToast('注册成功，请登录', 'success');
+              $('#registerModal').modal('hide');
+              $('#registerForm')[0].reset();
+              setTimeout(() => $('#loginModal').modal('show'), 500);
+            } else {
+              showToast(response.message || '注册失败', 'danger');
+            }
+          });
+      }
+
+      function handleLogout() {
+        AppState.token = null;
+        AppState.currentUser = null;
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        
+        showToast('已退出登录', 'info');
+        updateAuthUI();
+      }
+
+      function bindEvents() {
+        $('#buyBtn').on('click', handlePurchase);
+        
+        $('#loginBtn').on('click', function(e) {
+          e.preventDefault();
+          $('#loginModal').modal('show');
+        });
+
+        $('#showRegisterLink').on('click', function(e) {
+          e.preventDefault();
+          $('#loginModal').modal('hide');
+          $('#registerModal').modal('show');
+        });
+
+        $('#showLoginLink').on('click', function(e) {
+          e.preventDefault();
+          $('#registerModal').modal('hide');
+          $('#loginModal').modal('show');
+        });
+
+        $('#loginForm').on('submit', function(e) {
+          e.preventDefault();
+          handleLogin();
+        });
+
+        $('#registerForm').on('submit', function(e) {
+          e.preventDefault();
+          handleRegister();
+        });
+
+        $('#logoutBtn').on('click', function(e) {
+          e.preventDefault();
+          handleLogout();
+        });
+
+        $('#userCenterBtn').on('click', function(e) {
+          e.preventDefault();
+          window.location.href = '/';
+        });
+
+        $(document).on('click', '.episode-item', function() {
+          const episode = $(this).data('episode');
+          AppState.currentEpisode = episode;
+          
+          $('.episode-item').removeClass('active');
+          $(this).addClass('active');
+          
+          showToast(`正在播放第${episode}集`, 'info');
+        });
+      }
+
+      $(document).ready(function() {
+        initAuthState();
+        bindEvents();
+        loadAnimeDetail();
+      });
+
+    })();
+  </script>
+
+</body>
+</html>

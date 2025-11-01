@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>洪荒文化IP站 - By HAISNAP</title>
+  
+  <!-- Bootstrap 4 CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+  
+  <!-- 自定义样式 -->
+  <link rel="stylesheet" href="/static/css/style.css">
+  
+  <!-- Google Fonts - 思源宋体 -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap">
+</head>
+<body>
+
+  <!-- 导航栏 -->
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+      <a class="navbar-brand" href="#" id="backToHomeBtn">洪荒世界</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/admin">数据中台</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="categoryDropdown" role="button" data-toggle="dropdown">
+              分类浏览
+            </a>
+            <div class="dropdown-menu">
+              <a class="dropdown-item" href="/category/novel">📚 小说</a>
+              <a class="dropdown-item" href="/category/music">🎵 音乐</a>
+              <a class="dropdown-item" href="/category/anime">🎬 动漫</a>
+              <a class="dropdown-item" href="/category/wallpaper">🖼️ 壁纸</a>
+            </div>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" id="loginBtn">登录</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" id="registerBtn">注册</a>
+          </li>
+          <li class="nav-item dropdown" id="userDropdown" style="display: none;">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown">
+              <span id="usernameDisplay">用户</span>
+              <span class="membership-badge" id="membershipLevel">普通会员</span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right">
+              <a class="dropdown-item" href="#" id="userCenterBtn">会员中心</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="#" id="logoutBtn">退出登录</a>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 轮播图 -->
+  <div id="carouselBanner" class="carousel slide" data-ride="carousel">
+    <ol class="carousel-indicators">
+      <li data-target="#carouselBanner" data-slide-to="0" class="active"></li>
+      <li data-target="#carouselBanner" data-slide-to="1"></li>
+      <li data-target="#carouselBanner" data-slide-to="2"></li>
+    </ol>
+    <div class="carousel-inner">
+      <div class="carousel-item active" style="background-image: url('https://hpi-hub.tos-cn-beijing.volces.com/static/styles/cHJpdmF0ZS9sci91748499171101-5946OGRfMS5qcGc.jpg');">
+        <div class="carousel-caption">
+          <h3>洪荒纪元 · 开天辟地</h3>
+          <p>探索远古神话，重温盘古开天的壮阔传奇</p>
+        </div>
+      </div>
+      <div class="carousel-item" style="background-image: url('https://hpi-hub.tos-cn-beijing.volces.com/static/batch_24/1757660354173-6723.jpg');">
+        <div class="carousel-caption">
+          <h3>神魔录 · 上古之战</h3>
+          <p>见证神魔大战，感受洪荒时代的磅礴史诗</p>
+        </div>
+      </div>
+      <div class="carousel-item" style="background-image: url('https://hpi-hub.tos-cn-beijing.volces.com/static/mobilewallpapers/cHJpdmF0ZS9sci91748499978948-4116zczNjMuanBn.jpg');">
+        <div class="carousel-caption">
+          <h3>洪荒文化 · 典藏集</h3>
+          <p>收藏珍稀作品，品味洪荒文化的独特魅力</p>
+        </div>
+      </div>
+    </div>
+    <a class="carousel-control-prev" href="#carouselBanner" role="button" data-slide="prev">
+      <span class="carousel-control-prev-icon"></span>
+    </a>
+    <a class="carousel-control-next" href="#carouselBanner" role="button" data-slide="next">
+      <span class="carousel-control-next-icon"></span>
+    </a>
+  </div>
+
+  <!-- 内容展示区 -->
+  <div id="contentSection">
+    <!-- 分类导航 -->
+    <div class="category-nav">
+      <div class="container">
+        <ul class="nav nav-pills justify-content-center">
+          <li class="nav-item">
+            <a class="nav-link active" href="/" data-category="all">全部</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/category/novel" data-category="novel">小说</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/category/music" data-category="music">音乐</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/category/anime" data-category="anime">动漫</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/category/wallpaper" data-category="wallpaper">壁纸</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 内容列表 -->
+    <div class="container mt-4">
+      <h2 class="page-title">精选内容</h2>
+      <div class="row" id="contentGrid">
+        <div class="loading">正在加载内容...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 会员中心 -->
+  <div id="userPanel" style="display: none;">
+    <div class="container">
+      <h2 class="page-title">会员中心</h2>
+      
+      <div class="user-panel">
+        <h4>个人信息</h4>
+        <p><strong>用户名：</strong><span id="userPanelUsername">-</span></p>
+        <p><strong>会员等级：</strong><span id="userPanelMembership">-</span></p>
+      </div>
+
+      <div class="user-panel">
+        <h4>我的订单</h4>
+        <div id="orderList">
+          <div class="loading">正在加载订单...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 登录模态框 -->
+  <div class="modal fade" id="loginModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">用户登录</h5>
+          <button type="button" class="close" data-dismiss="modal">
+            <span>&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="loginForm">
+            <div class="form-group">
+              <label for="loginUsername">用户名</label>
+              <input type="text" class="form-control" id="loginUsername" placeholder="请输入用户名" required>
+            </div>
+            <div class="form-group">
+              <label for="loginPassword">密码</label>
+              <input type="password" class="form-control" id="loginPassword" placeholder="请输入密码" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">登录</button>
+          </form>
+          <div class="text-center mt-3">
+            <small>还没有账号？<a href="#" id="showRegisterLink">立即注册</a></small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 注册模态框 -->
+  <div class="modal fade" id="registerModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">用户注册</h5>
+          <button type="button" class="close" data-dismiss="modal">
+            <span>&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="registerForm">
+            <div class="form-group">
+              <label for="registerUsername">用户名</label>
+              <input type="text" class="form-control" id="registerUsername" placeholder="请输入用户名" required>
+            </div>
+            <div class="form-group">
+              <label for="registerPassword">密码</label>
+              <input type="password" class="form-control" id="registerPassword" placeholder="请输入密码" required>
+            </div>
+            <div class="form-group">
+              <label for="registerConfirmPassword">确认密码</label>
+              <input type="password" class="form-control" id="registerConfirmPassword" placeholder="请再次输入密码" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">注册</button>
+          </form>
+          <div class="text-center mt-3">
+            <small>已有账号？<a href="#" id="showLoginLink">立即登录</a></small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- jQuery -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.min.js"></script>
+  
+  <!-- Bootstrap 4 JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <!-- 自定义JS -->
+  <script src="/static/js/main.js"></script>
+
+</body>
+</html>

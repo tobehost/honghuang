@@ -1,0 +1,518 @@
+/* primordial-culture-site-311714/frontend/public/static/css/style.css */
+
+/* ==================== 漫画风格全局样式 ==================== */
+/* Bold graphic aesthetic with high-contrast layouts */
+
+/* 洪荒主题 - 暖色系配色方案 + 漫画风格增强 */
+:root {
+  --primary-color: #d4681a;
+  --secondary-color: #8b4513;
+  --accent-color: #ff6347;
+  --dark-bg: #2c1810;
+  --light-bg: #fff8dc;
+  --text-dark: #3e2723;
+  --text-light: #ffd700;
+  --border-color: #daa520;
+  --shadow: rgba(212, 104, 26, 0.3);
+  
+  /* 漫画风格饱和主色调 */
+  --comic-red: #FF0000;
+  --comic-yellow: #FFFF00;
+  --comic-blue: #0000FF;
+  --comic-black: #000000;
+  --comic-white: #FFFFFF;
+}
+
+/* 全局样式 - 高对比度布局 */
+body {
+  font-family: "Source Han Serif SC", "Noto Serif SC", "思源宋体", serif;
+  background: linear-gradient(135deg, #fff8dc 0%, #ffe4b5 100%);
+  color: var(--text-dark);
+  min-height: 100vh;
+  position: relative;
+}
+
+/* 半色调纹理背景效果 */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: radial-gradient(circle, rgba(0,0,0,0.05) 1px, transparent 1px);
+  background-size: 4px 4px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* 漫画风格标题字体 */
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Comic Sans MS", "Arial Black", sans-serif;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* 导航栏样式增强 - 粗黑边框 */
+.navbar {
+  background: linear-gradient(90deg, var(--dark-bg) 0%, var(--secondary-color) 100%) !important;
+  box-shadow: 0 4px 12px var(--shadow);
+  border-bottom: 4px solid var(--comic-black);
+  position: relative;
+  z-index: 10;
+}
+
+.navbar-brand {
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: var(--text-light) !important;
+  text-shadow: 3px 3px 0px var(--comic-black);
+  letter-spacing: 2px;
+  font-family: "Comic Sans MS", "Arial Black", sans-serif;
+}
+
+.navbar-nav .nav-link {
+  color: var(--light-bg) !important;
+  font-size: 1.1rem;
+  margin: 0 10px;
+  transition: all 0.3s ease;
+  position: relative;
+  font-weight: 700;
+  text-shadow: 2px 2px 0px rgba(0,0,0,0.3);
+}
+
+.navbar-nav .nav-link:hover {
+  color: var(--comic-yellow) !important;
+  transform: translateY(-2px) scale(1.05);
+}
+
+.navbar-nav .nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 3px;
+  background: var(--comic-yellow);
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+  box-shadow: 0 2px 0 var(--comic-black);
+}
+
+.navbar-nav .nav-link:hover::after {
+  width: 80%;
+}
+
+/* 轮播图样式 - 粗黑边框 */
+.carousel-item {
+  height: 500px;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  border: 6px solid var(--comic-black);
+  box-shadow: 10px 10px 0px var(--comic-black);
+}
+
+.carousel-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(180deg, transparent 0%, rgba(44, 24, 16, 0.7) 100%);
+}
+
+.carousel-caption {
+  bottom: 30%;
+  text-shadow: 4px 4px 0px var(--comic-black);
+  background: rgba(212, 104, 26, 0.8);
+  padding: 20px;
+  border: 4px solid var(--comic-black);
+  border-radius: 15px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.carousel-caption h3 {
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: var(--comic-white);
+  margin-bottom: 15px;
+  font-family: "Comic Sans MS", "Arial Black", sans-serif;
+}
+
+.carousel-caption p {
+  font-size: 1.2rem;
+  color: var(--comic-white);
+  font-weight: 700;
+}
+
+/* 内容卡片样式 - 漫画风格 */
+.content-card {
+  background: var(--comic-white);
+  border-radius: 15px;
+  overflow: hidden;
+  transition: all 0.4s ease;
+  box-shadow: 0 4px 15px var(--shadow);
+  border: 5px solid var(--comic-black);
+  margin-bottom: 30px;
+  position: relative;
+}
+
+.content-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 12px 12px 0px var(--comic-black);
+  border-color: var(--comic-red);
+}
+
+.content-card img {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+  border-bottom: 5px solid var(--comic-black);
+}
+
+.content-card:hover img {
+  transform: scale(1.1);
+}
+
+.content-card .card-body {
+  padding: 20px;
+  background: var(--comic-white);
+}
+
+.content-card .card-title {
+  color: var(--secondary-color);
+  font-size: 1.3rem;
+  font-weight: 900;
+  margin-bottom: 10px;
+  font-family: "Comic Sans MS", "Arial Black", sans-serif;
+  text-transform: uppercase;
+  text-shadow: 2px 2px 0px rgba(0,0,0,0.1);
+}
+
+.content-card .card-text {
+  color: var(--text-dark);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  font-weight: 600;
+}
+
+.content-card .price {
+  color: var(--comic-red);
+  font-size: 1.8rem;
+  font-weight: 900;
+  margin-top: 10px;
+  text-shadow: 2px 2px 0px rgba(0,0,0,0.2);
+  font-family: "Arial Black", sans-serif;
+}
+
+/* 按钮样式 - 漫画风格 */
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%) !important;
+  border: 4px solid var(--comic-black) !important;
+  padding: 10px 30px;
+  font-size: 1.1rem;
+  font-weight: 900;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  box-shadow: 6px 6px 0px var(--comic-black);
+  text-shadow: 2px 2px 0px rgba(0,0,0,0.3);
+  font-family: "Comic Sans MS", "Arial Black", sans-serif;
+  text-transform: uppercase;
+}
+
+.btn-primary:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 8px 8px 0px var(--comic-black);
+  background: linear-gradient(135deg, var(--comic-red) 0%, var(--comic-yellow) 100%) !important;
+}
+
+.btn-primary:active {
+  transform: translate(2px, 2px);
+  box-shadow: 4px 4px 0px var(--comic-black);
+}
+
+.btn-outline-light {
+  border: 3px solid var(--light-bg) !important;
+  color: var(--light-bg) !important;
+  padding: 8px 25px;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  font-weight: 700;
+  font-family: "Comic Sans MS", sans-serif;
+}
+
+.btn-outline-light:hover {
+  background: var(--comic-yellow) !important;
+  color: var(--comic-black) !important;
+  border-color: var(--comic-black) !important;
+  box-shadow: 4px 4px 0px var(--comic-black);
+}
+
+/* 分类导航样式 - 高对比度 */
+.category-nav {
+  background: var(--comic-white);
+  padding: 30px 0;
+  box-shadow: 0 2px 10px var(--shadow);
+  margin-bottom: 40px;
+  border-top: 5px solid var(--comic-black);
+  border-bottom: 5px solid var(--comic-black);
+}
+
+.category-nav .nav-pills .nav-link {
+  color: var(--secondary-color);
+  font-size: 1.1rem;
+  padding: 12px 30px;
+  margin: 0 10px;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  border: 3px solid var(--comic-black);
+  font-weight: 700;
+  font-family: "Comic Sans MS", sans-serif;
+  background: var(--comic-white);
+}
+
+.category-nav .nav-pills .nav-link:hover {
+  border-color: var(--comic-red);
+  color: var(--comic-red);
+  transform: translateY(-3px);
+  box-shadow: 4px 4px 0px var(--comic-black);
+}
+
+.category-nav .nav-pills .nav-link.active {
+  background: linear-gradient(135deg, var(--comic-red) 0%, var(--comic-yellow) 100%) !important;
+  color: var(--comic-white);
+  box-shadow: 6px 6px 0px var(--comic-black);
+  font-weight: 900;
+  border-color: var(--comic-black);
+}
+
+/* 会员中心样式 */
+.user-panel {
+  background: var(--comic-white);
+  border-radius: 15px;
+  padding: 30px;
+  box-shadow: 0 4px 15px var(--shadow);
+  margin-top: 30px;
+  border: 5px solid var(--comic-black);
+}
+
+.user-panel h4 {
+  color: var(--secondary-color);
+  font-weight: 900;
+  margin-bottom: 20px;
+  border-bottom: 4px solid var(--comic-black);
+  padding-bottom: 10px;
+  font-family: "Comic Sans MS", sans-serif;
+}
+
+.membership-badge {
+  display: inline-block;
+  padding: 8px 20px;
+  background: linear-gradient(135deg, var(--comic-red) 0%, var(--comic-yellow) 100%);
+  color: var(--comic-white);
+  border-radius: 20px;
+  font-weight: 900;
+  margin-left: 10px;
+  border: 3px solid var(--comic-black);
+  box-shadow: 4px 4px 0px var(--comic-black);
+  font-family: "Comic Sans MS", sans-serif;
+}
+
+/* 订单列表样式 */
+.order-item {
+  background: var(--comic-white);
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 8px var(--shadow);
+  border-left: 6px solid var(--primary-color);
+  border: 4px solid var(--comic-black);
+}
+
+.order-item .status {
+  padding: 5px 15px;
+  border-radius: 15px;
+  font-size: 0.9rem;
+  font-weight: 900;
+  border: 2px solid var(--comic-black);
+  font-family: "Comic Sans MS", sans-serif;
+}
+
+.order-item .status.paid {
+  background: var(--comic-blue);
+  color: var(--comic-white);
+}
+
+.order-item .status.pending {
+  background: var(--comic-yellow);
+  color: var(--comic-black);
+}
+
+/* 加载动画 */
+.loading {
+  text-align: center;
+  padding: 50px;
+  color: var(--primary-color);
+  font-size: 1.2rem;
+  font-weight: 700;
+  font-family: "Comic Sans MS", sans-serif;
+}
+
+.loading::after {
+  content: '...';
+  animation: dots 1.5s infinite;
+}
+
+@keyframes dots {
+  0%, 20% { content: '.'; }
+  40% { content: '..'; }
+  60%, 100% { content: '...'; }
+}
+
+/* 模态框样式 - 漫画风格 */
+.modal-content {
+  border-radius: 15px;
+  border: 5px solid var(--comic-black);
+  box-shadow: 10px 10px 0px var(--comic-black);
+}
+
+.modal-header {
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+  color: var(--comic-white);
+  border-radius: 15px 15px 0 0;
+  border-bottom: 4px solid var(--comic-black);
+}
+
+.modal-title {
+  font-weight: 900;
+  font-family: "Comic Sans MS", sans-serif;
+  text-shadow: 2px 2px 0px var(--comic-black);
+}
+
+.modal-body {
+  padding: 30px;
+  background: var(--comic-white);
+}
+
+.form-control {
+  border: 3px solid var(--comic-black);
+  border-radius: 10px;
+  padding: 12px;
+  font-weight: 600;
+}
+
+.form-control:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.2rem var(--shadow), 4px 4px 0px var(--comic-black);
+}
+
+/* 页面标题样式 */
+.page-title {
+  text-align: center;
+  margin: 40px 0;
+  color: var(--secondary-color);
+  font-size: 2.5rem;
+  font-weight: 900;
+  text-shadow: 4px 4px 0px var(--comic-black);
+  font-family: "Comic Sans MS", "Arial Black", sans-serif;
+  text-transform: uppercase;
+}
+
+/* 徽章样式 */
+.badge {
+  border: 2px solid var(--comic-black);
+  font-weight: 900;
+  padding: 6px 12px;
+  font-family: "Comic Sans MS", sans-serif;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .carousel-item {
+    height: 300px;
+    border: 4px solid var(--comic-black);
+  }
+  
+  .carousel-caption h3 {
+    font-size: 1.5rem;
+  }
+  
+  .category-nav .nav-pills .nav-link {
+    margin: 5px;
+    padding: 8px 20px;
+    font-size: 1rem;
+  }
+  
+  .page-title {
+    font-size: 1.8rem;
+  }
+  
+  .content-card {
+    border: 4px solid var(--comic-black);
+  }
+}
+
+/* 防止Bootstrap样式污染 */
+.content-card .card-body,
+.user-panel,
+.order-item {
+  font-family: "Source Han Serif SC", "Noto Serif SC", "思源宋体", serif !important;
+}
+
+/* 确保漫画风格标题不被覆盖 */
+h1, h2, h3, h4, h5, h6,
+.navbar-brand,
+.page-title,
+.content-card .card-title {
+  font-family: "Comic Sans MS", "Arial Black", sans-serif !important;
+}
+
+/* 动态阴影效果 */
+.shadow-effect {
+  box-shadow: 8px 8px 0px var(--comic-black);
+  transition: all 0.3s ease;
+}
+
+.shadow-effect:hover {
+  box-shadow: 12px 12px 0px var(--comic-black);
+}
+
+/* 半色调纹理类 */
+.halftone {
+  background-image: radial-gradient(circle, rgba(0,0,0,0.1) 1px, transparent 1px);
+  background-size: 8px 8px;
+}
+
+/* 语音气泡样式（漫画风格） */
+.speech-bubble {
+  position: relative;
+  background: var(--comic-white);
+  border: 4px solid var(--comic-black);
+  border-radius: 15px;
+  padding: 15px;
+  font-weight: 700;
+  box-shadow: 6px 6px 0px var(--comic-black);
+}
+
+.speech-bubble::after {
+  content: '';
+  position: absolute;
+  bottom: -20px;
+  left: 30px;
+  width: 0;
+  height: 0;
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent;
+  border-top: 20px solid var(--comic-black);
+}
+
+/* 确保全站高对比度 */
+strong, b {
+  font-weight: 900;
+  color: var(--comic-black);
+}

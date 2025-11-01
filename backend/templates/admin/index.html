@@ -1,0 +1,207 @@
+{% extends 'admin/master.html' %}
+
+{% block body %}
+<div class="container-fluid mt-4">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <h2 class="text-center mb-4" style="color: #8b4513; font-weight: bold; text-shadow: 2px 2px 4px rgba(212, 104, 26, 0.3);">
+                洪荒文化IP数据中台
+            </h2>
+        </div>
+    </div>
+
+    <!-- 核心数据指标卡片 -->
+    <div class="row">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2" style="border-left: 4px solid #667eea; border-radius: 10px;">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">总用户数</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ stats.total_users or 0 }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-users fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2" style="border-left: 4px solid #28a745; border-radius: 10px;">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">总内容数</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ stats.total_contents or 0 }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-book fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2" style="border-left: 4px solid #17a2b8; border-radius: 10px;">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">总订单数</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ stats.total_orders or 0 }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-shopping-cart fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                    <div class="row no-gutters align-items-center mt-2">
+                        <div class="col">
+                            <small class="text-muted">已支付: {{ stats.paid_orders or 0 }}</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2" style="border-left: 4px solid #ffc107; border-radius: 10px;">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">总营收</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">¥{{ "%.2f"|format(stats.revenue or 0) }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 快速访问功能区 -->
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="card shadow" style="border-radius: 10px;">
+                <div class="card-header py-3" style="background: linear-gradient(135deg, #d4681a 0%, #ff6347 100%); border-radius: 10px 10px 0 0;">
+                    <h6 class="m-0 font-weight-bold text-white">
+                        <i class="fas fa-list"></i> 快速访问
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-3 col-md-6 mb-3">
+                            <a href="{{ url_for('user.index_view') }}" class="btn btn-outline-primary btn-block btn-lg" style="border-radius: 8px;">
+                                <i class="fas fa-users"></i><br>
+                                <span class="mt-2">用户管理</span>
+                            </a>
+                        </div>
+                        <div class="col-lg-3 col-md-6 mb-3">
+                            <a href="{{ url_for('content.index_view') }}" class="btn btn-outline-success btn-block btn-lg" style="border-radius: 8px;">
+                                <i class="fas fa-book"></i><br>
+                                <span class="mt-2">内容管理</span>
+                            </a>
+                        </div>
+                        <div class="col-lg-3 col-md-6 mb-3">
+                            <a href="{{ url_for('order.index_view') }}" class="btn btn-outline-info btn-block btn-lg" style="border-radius: 8px;">
+                                <i class="fas fa-shopping-cart"></i><br>
+                                <span class="mt-2">订单管理</span>
+                            </a>
+                        </div>
+                        <div class="col-lg-3 col-md-6 mb-3">
+                            <a href="{{ url_for('statistics.index') }}" class="btn btn-outline-warning btn-block btn-lg" style="border-radius: 8px;">
+                                <i class="fas fa-chart-bar"></i><br>
+                                <span class="mt-2">数据统计</span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-lg-4 col-md-6 mb-3">
+                            <a href="{{ url_for('export.export_users') }}" class="btn btn-outline-secondary btn-block" style="border-radius: 8px;">
+                                <i class="fas fa-download"></i> 导出用户数据
+                            </a>
+                        </div>
+                        <div class="col-lg-4 col-md-6 mb-3">
+                            <a href="{{ url_for('export.export_contents') }}" class="btn btn-outline-secondary btn-block" style="border-radius: 8px;">
+                                <i class="fas fa-download"></i> 导出内容数据
+                            </a>
+                        </div>
+                        <div class="col-lg-4 col-md-6 mb-3">
+                            <a href="{{ url_for('export.export_orders') }}" class="btn btn-outline-secondary btn-block" style="border-radius: 8px;">
+                                <i class="fas fa-download"></i> 导出订单数据
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 系统信息 -->
+    <div class="row mt-4 mb-4">
+        <div class="col-md-12">
+            <div class="card shadow" style="border-radius: 10px;">
+                <div class="card-header py-3" style="background-color: #8b4513; border-radius: 10px 10px 0 0;">
+                    <h6 class="m-0 font-weight-bold text-white">
+                        <i class="fas fa-info-circle"></i> 系统信息
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>系统名称：</strong>洪荒文化IP数据中台</p>
+                            <p><strong>系统版本：</strong>v1.0.0</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>管理员账号：</strong>admin</p>
+                            <p><strong>默认密码：</strong>admin123</p>
+                        </div>
+                    </div>
+                    <div class="alert alert-info mt-3" role="alert">
+                        <i class="fas fa-lightbulb"></i> 
+                        <strong>提示：</strong>首次登录建议修改默认密码，确保系统安全。
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15) !important;
+    }
+    .btn {
+        transition: all 0.3s ease;
+    }
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+    .text-gray-800 {
+        color: #5a5c69 !important;
+    }
+    .text-gray-300 {
+        color: #dddfeb !important;
+    }
+    .border-left-primary {
+        border-left-color: #4e73df !important;
+    }
+    .border-left-success {
+        border-left-color: #1cc88a !important;
+    }
+    .border-left-info {
+        border-left-color: #36b9cc !important;
+    }
+    .border-left-warning {
+        border-left-color: #f6c23e !important;
+    }
+</style>
+{% endblock %}

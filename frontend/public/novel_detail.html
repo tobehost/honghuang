@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>小说详情 - 洪荒文化IP站 By HAISNAP</title>
+  
+  <!-- Bootstrap 4 CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+  
+  <!-- 自定义全局样式 -->
+  <link rel="stylesheet" href="/static/css/style.css">
+  
+  <!-- Google Fonts - 思源宋体 -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap">
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  
+  <style>
+    /* 漫画风格详情页专属样式 - 严格覆盖 */
+    .detail-container {
+      margin-top: 30px;
+      margin-bottom: 50px;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .novel-cover {
+      width: 100%;
+      border-radius: 15px;
+      border: 6px solid var(--comic-black) !important;
+      box-shadow: 12px 12px 0px var(--comic-black) !important;
+      object-fit: cover;
+      max-height: 600px;
+      transition: all 0.3s ease;
+    }
+    
+    .novel-cover:hover {
+      transform: translate(-3px, -3px);
+      box-shadow: 15px 15px 0px var(--comic-black) !important;
+    }
+    
+    .detail-card {
+      background: var(--comic-white) !important;
+      border-radius: 15px;
+      padding: 30px;
+      border: 5px solid var(--comic-black) !important;
+      box-shadow: 10px 10px 0px var(--comic-black) !important;
+      position: relative;
+    }
+    
+    .detail-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: radial-gradient(circle, rgba(0,0,0,0.03) 1px, transparent 1px);
+      background-size: 6px 6px;
+      pointer-events: none;
+      border-radius: 15px;
+    }
+    
+    .detail-title {
+      color: var(--secondary-color) !important;
+      font-size: 2.5rem !important;
+      font-weight: 900 !important;
+      margin-bottom: 20px;
+      border-bottom: 5px solid var(--comic-black) !important;
+      padding-bottom: 15px;
+      font-family: "Comic Sans MS", "Arial Black", sans-serif !important;
+      text-transform: uppercase;
+      text-shadow: 3px 3px 0px rgba(0,0,0,0.2);
+      letter-spacing: 2px;
+    }
+    
+    .detail-info {
+      margin-bottom: 15px;
+      font-size: 1.1rem;
+      line-height: 1.8;
+      font-weight: 700;
+    }
+    
+    .detail-info strong {
+      color: var(--secondary-color) !important;
+      display: inline-block;
+      width: 120px;
+      font-weight: 900 !important;
+      text-shadow: 2px 2px 0px rgba(0,0,0,0.1);
+    }
+    
+    .price-tag {
+      font-size: 3rem !important;
+      color: var(--comic-red) !important;
+      font-weight: 900 !important;
+      margin: 25px 0;
+      text-shadow: 4px 4px 0px var(--comic-black) !important;
+      font-family: "Arial Black", sans-serif !important;
+      display: inline-block;
+      padding: 15px 30px;
+      background: var(--comic-yellow);
+      border: 5px solid var(--comic-black) !important;
+      border-radius: 20px;
+      box-shadow: 8px 8px 0px var(--comic-black) !important;
+    }
+    
+    .description-section {
+      margin-top: 30px;
+      padding-top: 25px;
+      border-top: 4px solid var(--comic-black) !important;
+    }
+    
+    .description-section h4 {
+      color: var(--secondary-color) !important;
+      font-weight: 900 !important;
+      margin-bottom: 15px;
+      font-family: "Comic Sans MS", "Arial Black", sans-serif !important;
+      text-transform: uppercase;
+      font-size: 1.5rem;
+      text-shadow: 2px 2px 0px rgba(0,0,0,0.1);
+    }
+    
+    .description-text {
+      font-size: 1.05rem;
+      line-height: 1.9;
+      color: var(--text-dark) !important;
+      text-align: justify;
+      font-weight: 600;
+      background: rgba(255, 255, 0, 0.05);
+      padding: 20px;
+      border-radius: 10px;
+      border: 3px solid var(--comic-black) !important;
+    }
+    
+    .action-buttons {
+      margin-top: 30px;
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+    
+    .btn-buy {
+      flex: 1;
+      min-width: 200px;
+      padding: 18px 35px !important;
+      font-size: 1.3rem !important;
+      font-weight: 900 !important;
+      border: 5px solid var(--comic-black) !important;
+      box-shadow: 8px 8px 0px var(--comic-black) !important;
+      background: linear-gradient(135deg, var(--comic-red) 0%, var(--comic-yellow) 100%) !important;
+      color: var(--comic-white) !important;
+      text-transform: uppercase;
+      font-family: "Comic Sans MS", "Arial Black", sans-serif !important;
+    }
+    
+    .btn-buy:hover {
+      transform: translate(-2px, -2px) !important;
+      box-shadow: 10px 10px 0px var(--comic-black) !important;
+      color: var(--comic-white) !important;
+    }
+    
+    .btn-back {
+      padding: 18px 35px !important;
+      font-size: 1.2rem !important;
+      background: linear-gradient(135deg, #8b4513 0%, #6c3410 100%) !important;
+      border: 5px solid var(--comic-black) !important;
+      color: white !important;
+      font-weight: 900 !important;
+      box-shadow: 8px 8px 0px var(--comic-black) !important;
+      text-transform: uppercase;
+      font-family: "Comic Sans MS", sans-serif !important;
+    }
+    
+    .btn-back:hover {
+      background: linear-gradient(135deg, #6c3410 0%, #8b4513 100%) !important;
+      color: white !important;
+      transform: translate(-2px, -2px) !important;
+      box-shadow: 10px 10px 0px var(--comic-black) !important;
+    }
+    
+    .related-section {
+      margin-top: 50px;
+      padding-top: 30px;
+      border-top: 5px solid var(--comic-black) !important;
+    }
+    
+    .related-title {
+      color: var(--secondary-color) !important;
+      font-size: 2rem !important;
+      font-weight: 900 !important;
+      margin-bottom: 25px;
+      text-align: center;
+      font-family: "Comic Sans MS", "Arial Black", sans-serif !important;
+      text-transform: uppercase;
+      text-shadow: 4px 4px 0px var(--comic-black);
+      background: var(--comic-yellow);
+      padding: 15px;
+      border: 5px solid var(--comic-black) !important;
+      border-radius: 15px;
+      box-shadow: 8px 8px 0px var(--comic-black) !important;
+    }
+    
+    .badge-category {
+      background: linear-gradient(135deg, var(--comic-red) 0%, var(--comic-yellow) 100%) !important;
+      color: var(--comic-white) !important;
+      padding: 10px 25px;
+      border-radius: 25px;
+      font-size: 1.1rem !important;
+      font-weight: 900 !important;
+      display: inline-block;
+      margin-bottom: 20px;
+      border: 4px solid var(--comic-black) !important;
+      box-shadow: 6px 6px 0px var(--comic-black) !important;
+      font-family: "Comic Sans MS", "Arial Black", sans-serif !important;
+      text-transform: uppercase;
+    }
+    
+    .loading-spinner {
+      text-align: center;
+      padding: 100px 0;
+      color: var(--primary-color) !important;
+      font-size: 1.5rem;
+      font-weight: 900;
+      font-family: "Comic Sans MS", sans-serif !important;
+    }
+    
+    .error-message {
+      text-align: center;
+      padding: 100px 0;
+      color: var(--comic-red) !important;
+      font-weight: 900;
+      font-family: "Comic Sans MS", sans-serif !important;
+    }
+    
+    .chapter-list {
+      margin-top: 20px;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    
+    .chapter-item {
+      padding: 15px 18px;
+      border: 4px solid var(--comic-black) !important;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: var(--comic-white) !important;
+      font-weight: 700;
+      box-shadow: 4px 4px 0px var(--comic-black) !important;
+    }
+    
+    .chapter-item:hover {
+      border-color: var(--comic-red) !important;
+      background: var(--comic-yellow) !important;
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0px var(--comic-black) !important;
+    }
+    
+    .chapter-item.active {
+      border-color: var(--comic-red) !important;
+      background: var(--comic-yellow) !important;
+      font-weight: 900 !important;
+      box-shadow: 6px 6px 0px var(--comic-black) !important;
+    }
+    
+    .stats-badge {
+      display: inline-block;
+      padding: 8px 18px;
+      background: var(--comic-white) !important;
+      border: 3px solid var(--comic-black) !important;
+      border-radius: 20px;
+      margin-right: 10px;
+      margin-bottom: 10px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      box-shadow: 4px 4px 0px var(--comic-black) !important;
+    }
+    
+    /* 漫画风格内容卡片覆盖 */
+    .content-card {
+      border: 5px solid var(--comic-black) !important;
+      box-shadow: 8px 8px 0px var(--comic-black) !important;
+      background: var(--comic-white) !important;
+    }
+    
+    .content-card:hover {
+      box-shadow: 12px 12px 0px var(--comic-black) !important;
+      border-color: var(--comic-red) !important;
+    }
+    
+    .content-card .card-title {
+      font-family: "Comic Sans MS", "Arial Black", sans-serif !important;
+      font-weight: 900 !important;
+      text-transform: uppercase;
+    }
+    
+    .content-card .price {
+      color: var(--comic-red) !important;
+      font-weight: 900 !important;
+      text-shadow: 2px 2px 0px rgba(0,0,0,0.2);
+    }
+    
+    /* 响应式调整 */
+    @media (max-width: 768px) {
+      .detail-title {
+        font-size: 1.8rem !important;
+      }
+      
+      .price-tag {
+        font-size: 2rem !important;
+        padding: 10px 20px;
+      }
+      
+      .novel-cover {
+        border: 4px solid var(--comic-black) !important;
+        box-shadow: 8px 8px 0px var(--comic-black) !important;
+      }
+      
+      .detail-card {
+        border: 4px solid var(--comic-black) !important;
+        box-shadow: 6px 6px 0px var(--comic-black) !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 导航栏 -->
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+      <a class="navbar-brand" href="/">洪荒世界</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link active" href="/category/novel">📚 小说</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/category/music">🎵 音乐</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/category/anime">🎬 动漫</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/category/wallpaper">🖼️ 壁纸</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/admin">数据中台</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" id="loginBtn">登录</a>
+          </li>
+          <li class="nav-item dropdown" id="userDropdown" style="display: none;">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown">
+              <span id="usernameDisplay">用户</span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right">
+              <a class="dropdown-item" href="#" id="userCenterBtn">会员中心</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="#" id="logoutBtn">退出登录</a>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 详情内容 -->
+  <div class="container detail-container">
+    <div id="loadingSpinner" class="loading-spinner">
+      <div class="spinner-border text-primary" role="status">
+        <span class="sr-only">加载中...</span>
+      </div>
+      <p class="mt-3">正在加载小说详情</p>
+    </div>
+
+    <div id="errorMessage" class="error-message" style="display: none;">
+      <h3>加载失败</h3>
+      <p>小说信息不存在或已被删除</p>
+      <a href="/category/novel" class="btn btn-primary mt-3">返回小说列表</a>
+    </div>
+
+    <div id="detailContent" style="display: none;">
+      <div class="row">
+        <!-- 左侧封面区 -->
+        <div class="col-md-4">
+          <img id="novelCover" src="" alt="小说封面" class="novel-cover">
+          
+          <!-- 章节列表 -->
+          <div class="mt-4">
+            <h5 style="color: var(--secondary-color); font-weight: 900; font-family: 'Comic Sans MS', sans-serif; text-transform: uppercase;">章节目录</h5>
+            <div class="chapter-list" id="chapterList">
+              <!-- 章节通过JavaScript动态生成 -->
+            </div>
+          </div>
+        </div>
+
+        <!-- 右侧信息区 -->
+        <div class="col-md-8">
+          <div class="detail-card">
+            <span class="badge-category">📚 小说</span>
+            <h1 class="detail-title" id="novelTitle">小说标题</h1>
+            
+            <div class="detail-info">
+              <strong>作者：</strong>
+              <span id="novelAuthor">-</span>
+            </div>
+            
+            <div class="detail-info">
+              <strong>分类：</strong>
+              <span id="novelCategory">-</span>
+            </div>
+            
+            <div class="detail-info">
+              <strong>字数：</strong>
+              <span id="novelWordCount">-</span>
+            </div>
+            
+            <div class="detail-info">
+              <strong>连载状态：</strong>
+              <span id="novelStatus">-</span>
+            </div>
+            
+            <div class="detail-info">
+              <strong>发布时间：</strong>
+              <span id="novelPublishDate">-</span>
+            </div>
+            
+            <div class="mt-3">
+              <span class="stats-badge">⭐ 评分：9.8</span>
+              <span class="stats-badge">👁️ 阅读：15.2万次</span>
+              <span class="stats-badge">💬 评论：328条</span>
+            </div>
+            
+            <div class="price-tag">
+              ¥<span id="novelPrice">0.00</span>
+            </div>
+            
+            <div class="description-section">
+              <h4>内容简介</h4>
+              <p class="description-text" id="novelDescription">
+                小说简介加载中...
+              </p>
+            </div>
+            
+            <div class="action-buttons">
+              <button class="btn btn-primary btn-buy" id="buyBtn">
+                <i class="fas fa-shopping-cart"></i> 立即购买
+              </button>
+              <a href="/category/novel" class="btn btn-back">
+                <i class="fas fa-arrow-left"></i> 返回列表
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 相关推荐 -->
+      <div class="related-section">
+        <h3 class="related-title">相关推荐</h3>
+        <div class="row" id="relatedContent">
+          <div class="col-12 text-center text-muted">
+            <p>正在加载相关小说...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 登录模态框 -->
+  <div class="modal fade" id="loginModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">用户登录</h5>
+          <button type="button" class="close" data-dismiss="modal">
+            <span>&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="loginForm">
+            <div class="form-group">
+              <label for="loginUsername">用户名</label>
+              <input type="text" class="form-control" id="loginUsername" placeholder="请输入用户名" required>
+            </div>
+            <div class="form-group">
+              <label for="loginPassword">密码</label>
+              <input type="password" class="form-control" id="loginPassword" placeholder="请输入密码" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">登录</button>
+          </form>
+          <div class="text-center mt-3">
+            <small>还没有账号？<a href="#" id="showRegisterLink">立即注册</a></small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 注册模态框 -->
+  <div class="modal fade" id="registerModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">用户注册</h5>
+          <button type="button" class="close" data-dismiss="modal">
+            <span>&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="registerForm">
+            <div class="form-group">
+              <label for="registerUsername">用户名</label>
+              <input type="text" class="form-control" id="registerUsername" placeholder="请输入用户名" required>
+            </div>
+            <div class="form-group">
+              <label for="registerPassword">密码</label>
+              <input type="password" class="form-control" id="registerPassword" placeholder="请输入密码" required>
+            </div>
+            <div class="form-group">
+              <label for="registerConfirmPassword">确认密码</label>
+              <input type="password" class="form-control" id="registerConfirmPassword" placeholder="请再次输入密码" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">注册</button>
+          </form>
+          <div class="text-center mt-3">
+            <small>已有账号？<a href="#" id="showLoginLink">立即登录</a></small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- jQuery -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.min.js"></script>
+  
+  <!-- Bootstrap 4 JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    (function() {
+      'use strict';
+
+      const AppState = {
+        currentUser: null,
+        token: null,
+        novelId: null,
+        novelData: null,
+        currentChapter: 1
+      };
+
+      const API_BASE = '/api';
+
+      function showToast(message, type) {
+        const toast = $('<div>')
+          .addClass('alert alert-' + type + ' alert-dismissible fade show')
+          .css({
+            position: 'fixed',
+            top: '80px',
+            right: '20px',
+            zIndex: 9999,
+            minWidth: '300px'
+          })
+          .html(message + '<button type="button" class="close" data-dismiss="alert"><span>&times;</span></button>');
+        
+        $('body').append(toast);
+        setTimeout(function() { toast.alert('close'); }, 3000);
+      }
+
+      function apiRequest(endpoint, options) {
+        options = options || {};
+        const config = {
+          url: API_BASE + endpoint,
+          method: options.method || 'GET',
+          contentType: 'application/json',
+          dataType: 'json',
+          timeout: 15000
+        };
+
+        if (AppState.token) {
+          config.headers = { 'Authorization': 'Bearer ' + AppState.token };
+        }
+
+        if (options.data && config.method !== 'GET') {
+          config.data = JSON.stringify(options.data);
+        }
+
+        return $.ajax(config).fail(function(jqXHR) {
+          if (jqXHR.status === 401) {
+            handleLogout();
+            showToast('登录已过期，请重新登录', 'warning');
+          }
+        });
+      }
+
+      function getNovelIdFromUrl() {
+        const pathParts = window.location.pathname.split('/');
+        return pathParts[pathParts.length - 1];
+      }
+
+      function loadNovelDetail() {
+        AppState.novelId = getNovelIdFromUrl();
+        
+        if (!AppState.novelId || isNaN(AppState.novelId)) {
+          showError();
+          return;
+        }
+
+        apiRequest('/content/' + AppState.novelId)
+          .done(function(response) {
+            if (response.success && response.data) {
+              AppState.novelData = response.data;
+              renderNovelDetail(response.data);
+              generateChapterList();
+              loadRelatedNovels();
+            } else {
+              showError();
+            }
+          })
+          .fail(function() {
+            showError();
+          });
+      }
+
+      function renderNovelDetail(novel) {
+        $('#loadingSpinner').hide();
+        $('#detailContent').fadeIn();
+
+        $('#novelTitle').text(novel.title || '未知小说');
+        $('#novelCover').attr('src', novel.image_url || 'https://via.placeholder.com/300x450');
+        $('#novelPrice').text(novel.price ? novel.price.toFixed(2) : '0.00');
+        $('#novelDescription').text(novel.description || '暂无简介');
+        
+        $('#novelAuthor').text('洪荒世界作者团队');
+        $('#novelCategory').text('玄幻 / 洪荒 / 神话');
+        $('#novelWordCount').text('约120万字');
+        $('#novelStatus').text('连载中');
+        
+        if (novel.created_at) {
+          const date = new Date(novel.created_at);
+          $('#novelPublishDate').text(date.toLocaleDateString('zh-CN'));
+        }
+
+        document.title = novel.title + ' - 小说详情 - 洪荒文化IP站';
+      }
+
+      function generateChapterList() {
+        const chaptersHtml = [];
+        const titles = [
+          '洪荒初开', '盘古开天', '天地玄黄', '神魔初现', '上古之战',
+          '洪荒纪元', '神话传说', '远古秘闻', '天地法则', '混沌初分'
+        ];
+        
+        for (let i = 1; i <= 50; i++) {
+          chaptersHtml.push('<div class="chapter-item ' + (i === 1 ? 'active' : '') + '" data-chapter="' + i + '">第' + i + '章 - ' + titles[(i - 1) % titles.length] + '</div>');
+        }
+        $('#chapterList').html(chaptersHtml.join(''));
+      }
+
+      function showError() {
+        $('#loadingSpinner').hide();
+        $('#errorMessage').fadeIn();
+      }
+
+      function loadRelatedNovels() {
+        apiRequest('/content?type=novel&limit=3')
+          .done(function(response) {
+            if (response.success && response.data) {
+              const filtered = response.data.filter(function(item) {
+                return item.id !== parseInt(AppState.novelId);
+              });
+              renderRelatedNovels(filtered.slice(0, 3));
+            }
+          });
+      }
+
+      function renderRelatedNovels(novels) {
+        if (!novels || novels.length === 0) {
+          $('#relatedContent').html('<div class="col-12 text-center text-muted"><p>暂无相关推荐</p></div>');
+          return;
+        }
+
+        const html = novels.map(function(item) {
+          return '<div class="col-md-4"><div class="content-card"><img src="' + (item.image_url || 'https://via.placeholder.com/300x250') + '" alt="' + item.title + '"><div class="card-body"><h5 class="card-title">' + item.title + '</h5><p class="card-text">' + (item.description || '暂无描述') + '</p><div class="d-flex justify-content-between align-items-center mt-3"><span class="price">¥' + item.price + '</span><a href="/detail/' + item.id + '" class="btn btn-primary btn-sm">查看详情</a></div></div></div></div>';
+        }).join('');
+
+        $('#relatedContent').html(html);
+      }
+
+      function handlePurchase() {
+        if (!AppState.currentUser) {
+          showToast('请先登录', 'warning');
+          $('#loginModal').modal('show');
+          return;
+        }
+
+        if (!AppState.novelData) {
+          showToast('小说信息加载失败', 'danger');
+          return;
+        }
+
+        if (confirm('确认购买《' + AppState.novelData.title + '》？价格：¥' + AppState.novelData.price)) {
+          apiRequest('/order', {
+            method: 'POST',
+            data: { content_id: AppState.novelId }
+          })
+            .done(function(response) {
+              if (response.success) {
+                showToast('订单创建成功', 'success');
+                if (confirm('是否立即支付？')) {
+                  handlePayment(response.data.id);
+                }
+              } else {
+                showToast(response.message || '购买失败', 'danger');
+              }
+            });
+        }
+      }
+
+      function handlePayment(orderId) {
+        apiRequest('/order/' + orderId + '/pay', { method: 'POST' })
+          .done(function(response) {
+            if (response.success) {
+              showToast('支付成功', 'success');
+            } else {
+              showToast(response.message || '支付失败', 'danger');
+            }
+          });
+      }
+
+      function initAuthState() {
+        const token = localStorage.getItem('token');
+        const user = localStorage.getItem('user');
+        
+        if (token && user) {
+          try {
+            AppState.token = token;
+            AppState.currentUser = JSON.parse(user);
+            updateAuthUI();
+          } catch (e) {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+          }
+        }
+      }
+
+      function updateAuthUI() {
+        if (AppState.currentUser) {
+          $('#loginBtn').hide();
+          $('#userDropdown').show();
+          $('#usernameDisplay').text(AppState.currentUser.username);
+        } else {
+          $('#loginBtn').show();
+          $('#userDropdown').hide();
+        }
+      }
+
+      function handleLogin() {
+        const username = $('#loginUsername').val().trim();
+        const password = $('#loginPassword').val();
+
+        if (!username || !password) {
+          showToast('请填写用户名和密码', 'warning');
+          return;
+        }
+
+        apiRequest('/user/login', {
+          method: 'POST',
+          data: { username: username, password: password }
+        })
+          .done(function(response) {
+            if (response.success) {
+              AppState.token = response.token;
+              AppState.currentUser = response.user;
+              
+              localStorage.setItem('token', response.token);
+              localStorage.setItem('user', JSON.stringify(response.user));
+              
+              showToast('登录成功', 'success');
+              $('#loginModal').modal('hide');
+              $('#loginForm')[0].reset();
+              updateAuthUI();
+            } else {
+              showToast(response.message || '登录失败', 'danger');
+            }
+          });
+      }
+
+      function handleRegister() {
+        const username = $('#registerUsername').val().trim();
+        const password = $('#registerPassword').val();
+        const confirmPassword = $('#registerConfirmPassword').val();
+
+        if (!username || !password) {
+          showToast('请填写完整信息', 'warning');
+          return;
+        }
+
+        if (password !== confirmPassword) {
+          showToast('两次密码输入不一致', 'warning');
+          return;
+        }
+
+        apiRequest('/user/register', {
+          method: 'POST',
+          data: { username: username, password: password }
+        })
+          .done(function(response) {
+            if (response.success) {
+              showToast('注册成功，请登录', 'success');
+              $('#registerModal').modal('hide');
+              $('#registerForm')[0].reset();
+              setTimeout(function() { $('#loginModal').modal('show'); }, 500);
+            } else {
+              showToast(response.message || '注册失败', 'danger');
+            }
+          });
+      }
+
+      function handleLogout() {
+        AppState.token = null;
+        AppState.currentUser = null;
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        
+        showToast('已退出登录', 'info');
+        updateAuthUI();
+      }
+
+      function bindEvents() {
+        $('#buyBtn').on('click', handlePurchase);
+        
+        $('#loginBtn').on('click', function(e) {
+          e.preventDefault();
+          $('#loginModal').modal('show');
+        });
+
+        $('#showRegisterLink').on('click', function(e) {
+          e.preventDefault();
+          $('#loginModal').modal('hide');
+          $('#registerModal').modal('show');
+        });
+
+        $('#showLoginLink').on('click', function(e) {
+          e.preventDefault();
+          $('#registerModal').modal('hide');
+          $('#loginModal').modal('show');
+        });
+
+        $('#loginForm').on('submit', function(e) {
+          e.preventDefault();
+          handleLogin();
+        });
+
+        $('#registerForm').on('submit', function(e) {
+          e.preventDefault();
+          handleRegister();
+        });
+
+        $('#logoutBtn').on('click', function(e) {
+          e.preventDefault();
+          handleLogout();
+        });
+
+        $('#userCenterBtn').on('click', function(e) {
+          e.preventDefault();
+          window.location.href = '/';
+        });
+
+        $(document).on('click', '.chapter-item', function() {
+          const chapter = $(this).data('chapter');
+          AppState.currentChapter = chapter;
+          
+          $('.chapter-item').removeClass('active');
+          $(this).addClass('active');
+          
+          showToast('正在阅读第' + chapter + '章', 'info');
+        });
+      }
+
+      $(document).ready(function() {
+        initAuthState();
+        bindEvents();
+        loadNovelDetail();
+      });
+
+    })();
+  </script>
+
+</body>
+</html>
