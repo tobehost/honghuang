@@ -1,4 +1,4 @@
-# primordial-culture-site-311714/backend/admin.py
+# app/admin/admin.py
 import os
 import csv
 import io
@@ -8,12 +8,14 @@ from flask_admin import Admin, AdminIndexView, BaseView, expose
 from flask_admin.contrib.sqla import ModelView
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import check_password_hash
+from app.extentions.db_postgres import db
+from app.models.user import User
+from app.models.content import Content
 import logging
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-db = SQLAlchemy()
 
 class SecureModelView(ModelView):
     """安全的模型视图基类，添加权限验证"""
